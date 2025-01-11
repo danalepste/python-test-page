@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Preferences Visualization</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Travel Preferences Over Time</h1>
+        <div id="chart"></div>
+    </div>
+    <script>
+        // Fetch data from the backend
+        fetch("/data")
+            .then(response => response.json())
+            .then(data => {
+                const months = data.months;
+                const popularity = data.popularity;
+
+                // Prepare data for Plotly
+                const traces = Object.keys(popularity).map(destination => ({
+                    x: months,
+                    y: popularity[destination],
+                    mode: "lines+markers",
+                    name: destination
+                }));
+
+                // Create the plot
+                const layout = {
+                    title: "Monthly Travel Destination Popularity",
+                    xaxis: { title: "Month" },
+                    yaxis: { title: "Search Popularity" }
+                };
+
+                Plotly.newPlot("chart", traces, layout);
+            });
+    </script>
+</body>
+</html>
